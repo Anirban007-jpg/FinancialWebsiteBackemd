@@ -23,6 +23,8 @@ app.use(cp())
 //cors
 app.use(cors());    
 
+fs.readdirSync('./routes').map((r) => app.use('/', require(`./routes/${r}`)));     // localhost:5005/
+
 
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError'){
