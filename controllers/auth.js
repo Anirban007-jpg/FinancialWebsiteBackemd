@@ -110,5 +110,171 @@ exports.individualsignup = (req, res) => {
              })
          })
      }
+
+     exports.forgotPasword = (req,res) => {
+        const { email } = req.body.Email;
+
+ 
+        Individual.findOne({ email }).exec((err, individual) => {
+            if (err || !individual) {
+                return res.status(401).json({
+                    error: 'User with that email does not exist'
+                });
+            }
+      
+            const token = jwt.sign({ _id: individual._id }, process.env.JWT_RESET_PASSWORD, { expiresIn: '10m' });
+            // console.log(individual);
+      
+            let transporter = nm.createTransport({
+              host: "smtp.gmail.com",
+              port: 465,
+              auth: {
+                  user: 'financia2926@gmail.com',
+                  pass: 'rqmd mkqm tphc kjme',
+              },
+              secure: true
+          
+              })
+            // email
+            
+            const mailOptions = {
+                from: 
+                {
+                  name: 'FINANCIA',
+                  address : 'financia2926@gmail.com',
+                },
+                to: individual.Email,
+                subject: 'Email to reset password',
+                html: `
+                <p>Please use the following link to reset your password:</p> +
+                <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
+                <hr />
+                <p>This email may contain sensetive information</p>
+                <p>https://seoblog.com</p>
+              };
+              `
+            };
+            // populating the db > user > resetPasswordLink
+            return individual.updateOne({ resetPasswordLink: token }, (err, success) => {
+                if (err) {
+                    return res.json({ error: err });
+                } else {
+                  transporter.sendMail(mailOptions, (err,success) => {
+                    if(err){
+                        console.log(err);
+                        res.status(400).json({
+                            error: err
+                        });
+                        
+                    }
+            
+                    res.status(200).json({
+                        message: "password reset link sent succesfully!"
+                    })
+                      })
+                }
+            });
+        });
+
+        
+        Company.findOne({ email }).exec((err, company) => {
+            if (err || !company) {
+                return res.status(401).json({
+                    error: 'Company with that email does not exist'
+                });
+            }
+      
+            const token = jwt.sign({ _id: company._id }, process.env.JWT_RESET_PASSWORD, { expiresIn: '10m' });
+            // console.log(individual);
+      
+            let transporter = nm.createTransport({
+              host: "smtp.gmail.com",
+              port: 465,
+              auth: {
+                  user: 'financia2926@gmail.com',
+                  pass: 'rqmd mkqm tphc kjme',
+              },
+              secure: true
+          
+              })
+            // email
+            
+            const mailOptions = {
+                from: 
+                {
+                  name: 'FINANCIA',
+                  address : 'financia2926@gmail.com',
+                },
+                to: company.Company_email,
+                subject: 'Email to reset password',
+                html: `
+                <p>Please use the following link to reset your password:</p> +
+                <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
+                <hr />
+                <p>This email may contain sensetive information</p>
+                <p>https://seoblog.com</p>
+              };
+              `
+            };
+            // populating the db > user > resetPasswordLink
+            return company.updateOne({ resetPasswordLink: token }, (err, success) => {
+                if (err) {
+                    return res.json({ error: err });
+                } else {
+                  transporter.sendMail(mailOptions, (err,success) => {
+                    if(err){
+                        console.log(err);
+                        res.status(400).json({
+                            error: err
+                        });
+                        
+                    }
+            
+                    res.status(200).json({
+                        message: "password reset link sent succesfully!"
+                    })
+                      })
+                }
+            });
+        });
+      };
+      
+      exports.ResetPassword = (req,res) => {
+        const { resetPasswordLink, newPassword } = req.body;
+      
+        if (resetPasswordLink) {
+            jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function(err, decoded) {
+                if (err) {
+                    return res.status(401).json({
+                        error: 'Expired link. Try again'
+                    });
+                }
+                Company.findOne({ resetPasswordLink }, (err, company) => {
+                    if (err || !company) {
+                        return res.status(401).json({
+                            error: 'Something went wrong. Try later'
+                        });
+                    }
+                    const updatedFields = {
+                        password: bcrypt.hashSync(newPassword,10),
+                        resetPasswordLink: ''
+                    };
+      
+                    company = _.extend(company, updatedFields);
+      
+                    company.save((err, result) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: err
+                            });
+                        }
+                        res.json({
+                            message: `Great! Now you can login with your new password`
+                        });
+                    });
+                });
+            });
+        }
+      }
    
  

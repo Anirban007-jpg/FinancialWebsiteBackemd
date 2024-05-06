@@ -19,3 +19,7 @@ exports.individualSignupValidator = [
     check('Contact_no').not().isEmpty().withMessage('Mobile Number is mandatory').isLength({min:10 , max:11}).withMessage('Mobile No must be 11 charecters long'),
     check('password').isLength({min: 6}).withMessage('Password must contain atleast 6 charecters long').matches(/\d/).withMessage("Password must contain a number"),
 ]
+
+exports.companyForgotPasswordValidator = [
+    check('Email').not().isEmpty().withMessage("Email is mandatory").isEmail().withMessage('Must be a valid email address')
+ ]
