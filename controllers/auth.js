@@ -26,13 +26,8 @@ exports.companysignup = (req, res) => {
         
             const {Company_Name,TAN_No,Company_email,Company_address,Company_contact_no,password,confirmedPassword,role} = req.body;
             let profile = `${process.env.CLIENT_URL}/profile/${Company_Name}`;
-            let Initials = "";
-            
-            for (let i=0;i< Company_Name.length; i++){
-              if (Company_Name[i].includes("ABCDEFGHIJKLMNOPQRSTUVWXYZ")){
-                Initials += Company_Name[i];
-              }
-            }
+            let gs = Company_Name.replace(/[a-z]/g, '');
+            let Initials= gs.replace(/\s+/g, '');
             
             if (confirmedPassword === null){
                 return res.status(403).json({
@@ -79,13 +74,9 @@ exports.individualsignup = (req, res) => {
          
              const {Name,PAN_No,Email,Address,Contact_no,password,confirmedPassword,role} = req.body;
              let profile = `${process.env.CLIENT_URL}/profile/${Name}`;
-             let Initials = "";
              
-             for (let i=0;i< Name.length; i++){
-               if (Name[i].includes("ABCDEFGHIJKLMNOPQRSTUVWXYZ")){
-                 Initials += Name[i];
-               }
-             }
+             let gs = Name.replace(/[a-z]/g, '');
+             let Initials= gs.replace(/\s+/g, '');
              
              if (confirmedPassword === null){
                  return res.status(403).json({
