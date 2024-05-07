@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { companysignup, individualsignup, forgotPasword, forgotPaswordforCompany } = require('../controllers/auth');
-const { companySignupValidator, individualSignupValidator, companyForgotPasswordValidator, companyUsersForgotPasswordValidator } = require('../validators/auth');
+const { companysignup, individualsignup, forgotPasword, forgotPaswordforCompany, ResetPassword } = require('../controllers/auth');
+const { companySignupValidator, individualSignupValidator, companyForgotPasswordValidator, companyUsersForgotPasswordValidator, resetPasswordValidator } = require('../validators/auth');
 const { runValidation } = require('../validators');
 
 
@@ -12,7 +12,7 @@ router.post('/registerasindividual', individualSignupValidator, runValidation,in
 // router.post('/google-login',googleLogin)
 router.put('/forgotpassword', companyForgotPasswordValidator, runValidation, forgotPasword);
 router.put('/forgotpasswordforCompany', companyUsersForgotPasswordValidator, runValidation, forgotPaswordforCompany);
-// router.put('/reset-password',resetPasswordValidator, runValidation, ResetPassword);
+router.put('/reset-password',resetPasswordValidator, runValidation, ResetPassword);
 // router.get('/get-all-companies',getALlCompmanies);
 // router.get('/secret', validateTokenMiddleware, companyMiddleware, (req,res) => {
 //     res.json("reached endpoint")

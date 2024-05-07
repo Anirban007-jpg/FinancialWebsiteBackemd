@@ -176,7 +176,7 @@ exports.forgotPasword = (req,res) => {
         });
       };
 
-    exports.forgotPaswordforCompany = (req,res) => {
+exports.forgotPaswordforCompany = (req,res) => {
 
     
           Company.findOne({ Company_email : req.body.Company_email }).exec((err, company) => {
@@ -212,7 +212,7 @@ exports.forgotPasword = (req,res) => {
                 subject: 'Email to reset password',
                 html: `
                 <p>Please use the following link to reset your password:</p> +
-                <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
+                <p>${process.env.CLIENT_URL}/auths/company/password/reset/${token}</p>
                 <hr />
                 <p>This email may contain sensetive information</p>
                 <p>https://seoblog.com</p>
@@ -245,8 +245,8 @@ exports.forgotPasword = (req,res) => {
     
 
    
-      exports.ResetPassword = (req,res) => {
-        const { resetPasswordLink, newPassword } = req.body;
+exports.ResetPassword = (req,res) => {
+    const { resetPasswordLink, newPassword } = req.body;
       
         if (resetPasswordLink) {
             jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, function(err, decoded) {
@@ -255,8 +255,8 @@ exports.forgotPasword = (req,res) => {
                         error: 'Expired link. Try again'
                     });
                 }
-                Company.findOne({ resetPasswordLink }, (err, company) => {
-                    if (err || !company) {
+                Individual.findOne({ resetPasswordLink }, (err, individual) => {
+                    if (err || !individual) {
                         return res.status(401).json({
                             error: 'Something went wrong. Try later'
                         });
@@ -266,9 +266,9 @@ exports.forgotPasword = (req,res) => {
                         resetPasswordLink: ''
                     };
       
-                    company = _.extend(company, updatedFields);
+                    individual = _.extend(individual, updatedFields);
       
-                    company.save((err, result) => {
+                    individual.save((err, result) => {
                         if (err) {
                             return res.status(400).json({
                                 error: err
