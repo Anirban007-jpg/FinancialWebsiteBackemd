@@ -22,4 +22,8 @@ exports.individualSignupValidator = [
 
 exports.companyForgotPasswordValidator = [
     check('Email').not().isEmpty().withMessage("Email is mandatory").isEmail().withMessage('Must be a valid email address')
- ]
+]
+
+exports.companyUsersForgotPasswordValidator = [
+    check('Company_email').not().isEmpty().withMessage("Email is mandatory").isEmail().withMessage('Must be a valid email address')
+]

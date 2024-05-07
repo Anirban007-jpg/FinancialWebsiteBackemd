@@ -111,11 +111,10 @@ exports.individualsignup = (req, res) => {
          })
      }
 
-     exports.forgotPasword = (req,res) => {
-        const { email } = req.body.Email;
+exports.forgotPasword = (req,res) => {
 
- 
-        Individual.findOne({ email }).exec((err, individual) => {
+
+    Individual.findOne({ Email : req.body.Email } , (err, individual) => {
             if (err || !individual) {
                 return res.status(401).json({
                     error: 'User with that email does not exist'
@@ -123,7 +122,7 @@ exports.individualsignup = (req, res) => {
             }
       
             const token = jwt.sign({ _id: individual._id }, process.env.JWT_RESET_PASSWORD, { expiresIn: '10m' });
-            // console.log(individual);
+            console.log(individual);
       
             let transporter = nm.createTransport({
               host: "smtp.gmail.com",
@@ -175,14 +174,18 @@ exports.individualsignup = (req, res) => {
                 }
             });
         });
+      };
 
+    exports.forgotPaswordforCompany = (req,res) => {
+
+    
+          Company.findOne({ Company_email : req.body.Company_email }).exec((err, company) => {
+        if (err || !company) {
+            return res.status(401).json({
+                error: 'Company with that email does not exist'
+            });
+        }
         
-        Company.findOne({ email }).exec((err, company) => {
-            if (err || !company) {
-                return res.status(401).json({
-                    error: 'Company with that email does not exist'
-                });
-            }
       
             const token = jwt.sign({ _id: company._id }, process.env.JWT_RESET_PASSWORD, { expiresIn: '10m' });
             // console.log(individual);
@@ -237,8 +240,11 @@ exports.individualsignup = (req, res) => {
                 }
             });
         });
-      };
       
+    };
+    
+
+   
       exports.ResetPassword = (req,res) => {
         const { resetPasswordLink, newPassword } = req.body;
       
