@@ -36,3 +36,13 @@ exports.resetPasswordValidator = [
         .isLength({ min: 6 })
         .withMessage('Password must be at least 6 characters long')
 ];
+
+exports.individualSigninValidator = [
+    check('PAN_No').notEmpty().withMessage('Must be a valid email address'),
+    check('password').notEmpty().withMessage('Must be a Password'),
+]
+
+exports.companySigninValidator = [
+    check('TAN_No').notEmpty().withMessage('Must be a valid email address'),
+    check('password').notEmpty().withMessage('Must be a Password'),
+]

@@ -60,7 +60,7 @@ exports.companysignup = (req, res) => {
                 }
             })
         })
-    }
+}
   
 
 exports.individualsignup = (req, res) => {
@@ -109,7 +109,7 @@ exports.individualsignup = (req, res) => {
                  }
              })
          })
-     }
+}
 
 exports.forgotPasword = (req,res) => {
 
@@ -174,7 +174,7 @@ exports.forgotPasword = (req,res) => {
                 }
             });
         });
-      };
+};
 
 exports.forgotPaswordforCompany = (req,res) => {
 
@@ -241,7 +241,7 @@ exports.forgotPaswordforCompany = (req,res) => {
             });
         });
       
-    };
+};
     
 
    
@@ -281,6 +281,149 @@ exports.ResetPassword = (req,res) => {
                 });
             });
         }
-      }
+}
    
+exports.login = (req,res) => {
+        const {PAN_No, password} = req.body;
+        Individual.findOne({PAN_No: PAN_No }).exec((err, individual) => {
+           if (err || !individual){
+               return res.status(400).json({
+                   error: "Company dosen't exsist!!! Please Check again"
+               });
+           }
+       
+           var checked = bcrypt.compareSync(password, individual.password);
+       
+           if (!checked) {
+               return res.status(400).json({
+                 error: "Password is wrong"
+               });
+           }
+       
+           const token = jwt.sign({_id: individual._id}, process.env.JWT_SECRET, {expiresIn: '1d'});
+       
+           res.cookie('token', token, {expiresIn: '1d'});
+       
+           const {Name,PAN_No,Email,role,Initials,Address,Contact_no,profile,Acknowledgement_No,email_verified} = individual;
+           return res.status(200).json({
+               token,
+               individual: {Name,PAN_No,Email,role,Initials,Address,Contact_no,profile,Acknowledgement_No,email_verified}
+           })
+        })  
+}
+
+exports.companylogin = (req,res) => {
+    const {TAN_No, password} = req.body;
+    Company.findOne({TAN_No: TAN_No }).exec((err, company) => {
+       if (err || !company){
+           return res.status(400).json({
+               error: "Company dosen't exsist!!! Please Check again"
+           });
+       }
+   
+       var checked = bcrypt.compareSync(password, company.password);
+   
+       if (!checked) {
+           return res.status(400).json({
+             error: "Password is wrong"
+           });
+       }
+   
+       const token = jwt.sign({_id: company._id}, process.env.JWT_SECRET, {expiresIn: '1d'});
+   
+       res.cookie('token', token, {expiresIn: '1d'});
+   
+       const {Company_Name,TAN_No,Company_email,role,email_verified,Initials,Company_address,Company_contact_no,profile,Acknowledgement_No} = company;
+       return res.status(200).json({
+           token,
+           company: {Company_Name,TAN_No,Company_email,role,email_verified,Initials,Company_address,Company_contact_no,profile,Acknowledgement_No}
+       })
+    })  
+}
+   
+exports.requireSignin = ejwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ["HS256"], // added later
+    credentialsRequired: false,
+    requestProperty: "auth"
+});
+
+  
+exports.signout = (req,res) => {
+    res.clearCookie("token")
+    res.json({
+      message: 'Signout Success'
+    })
+}
+
+
+exports.authMiddlewareforIndividual = (req,res,next) => {
+    const authUserId = req.auth._id;
+    Individual.findById({_id: authUserId}).exec((err,individual) => {
+      if (err || !individual){
+       return res.status(400).json({
+         error: "Individual already exsists"
+       })
+      }
  
+      req.profile = individual;
+      next();
+    })
+}
+
+ 
+exports.authMiddlewareforCompany = (req,res,next) => {
+    const authUserId = req.auth._id;
+    Company.findById({_id: authUserId}).exec((err,company) => {
+      if (err || !company){
+       return res.status(400).json({
+         error: "Company already exsists"
+       })
+      }
+ 
+      req.profile = company;
+      next();
+    })
+}
+
+exports.IndividualMiddleware = (req,res,next) => {
+    const authUserId = req.auth._id;
+    console.log(authUserId);
+    Individual.findById({_id: authUserId}).exec((err,individual) => {
+      if (err || !individual){
+       return res.status(400).json({
+         error: "Company already exsists"
+            })
+        }
+  
+        if (individual.role === "Company" || individual.role === "Admin" || individual.role !== "Individual"){
+            return res.status(400).json({
+                error: "Individual Area ! Access Denied"
+            })
+        }
+  
+        req.profile = individual;
+        next();
+    }) 
+}
+  
+  exports.adminMiddleware = (req,res,next) => {
+    const adminUserId = req.auth._id;
+    Company.findById({_id: adminUserId}).exec((err,company) => {
+      if (err || !company){
+       return res.status(400).json({
+         error: "Company already exsists"
+       })
+      }
+      if (company.role !== "Admin" || company.role === "Compamy"){
+        return res.status(400).json({
+          error: "Admin Resource ! Access Denied"
+        })
+      }
+  
+      req.profile = company;
+      next();
+    })
+  }
+  
+       
