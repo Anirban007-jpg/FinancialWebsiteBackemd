@@ -25,9 +25,9 @@ exports.companysignup = (req, res) => {
             }
         
             const {Company_Name,TAN_No,Company_email,Company_address,Company_contact_no,password,confirmedPassword,role} = req.body;
-            let profile = `${process.env.CLIENT_URL}/profile/${Company_Name}`;
             let gs = Company_Name.replace(/[a-z]/g, '');
             let Initials= gs.replace(/\s+/g, '');
+            let profile = `${process.env.CLIENT_URL}/profile/${Initials}`;
             
             if (confirmedPassword === null){
                 return res.status(403).json({
@@ -73,10 +73,10 @@ exports.individualsignup = (req, res) => {
              }
          
              const {Name,PAN_No,Email,Address,Contact_no,password,confirmedPassword,role} = req.body;
-             let profile = `${process.env.CLIENT_URL}/profile/${Name}`;
              
              let gs = Name.replace(/[a-z]/g, '');
              let Initials= gs.replace(/\s+/g, '');
+             let profile = `${process.env.CLIENT_URL}/profile/${Initials}`;
              
              if (confirmedPassword === null){
                  return res.status(403).json({
@@ -357,44 +357,17 @@ exports.signout = (req,res) => {
 }
 
 
-exports.authMiddlewareforIndividual = (req,res,next) => {
-    const authUserId = req.auth._id;
-    Individual.findById({_id: authUserId}).exec((err,individual) => {
-      if (err || !individual){
-       return res.status(400).json({
-         error: "Individual already exsists"
-       })
-      }
- 
-      req.profile = individual;
-      next();
-    })
-}
-
- 
-exports.authMiddlewareforCompany = (req,res,next) => {
-    const authUserId = req.auth._id;
-    Company.findById({_id: authUserId}).exec((err,company) => {
-      if (err || !company){
-       return res.status(400).json({
-         error: "Company already exsists"
-       })
-      }
- 
-      req.profile = company;
-      next();
-    })
-}
-
 exports.IndividualMiddleware = (req,res,next) => {
     const authUserId = req.auth._id;
     console.log(authUserId);
     Individual.findById({_id: authUserId}).exec((err,individual) => {
       if (err || !individual){
        return res.status(400).json({
-         error: "Company already exsists"
+         error: "Individual already exsists"
             })
         }
+
+        console.log(individual);
   
         if (individual.role === "Company" || individual.role === "Admin" || individual.role !== "Individual"){
             return res.status(400).json({

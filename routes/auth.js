@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { companysignup, individualsignup, forgotPasword, forgotPaswordforCompany, ResetPassword, login, companylogin, signout } = require('../controllers/auth');
+const { companysignup, individualsignup, forgotPasword, forgotPaswordforCompany, ResetPassword, login, companylogin, signout, requireSignin, IndividualMiddleware } = require('../controllers/auth');
 const { companySignupValidator, individualSignupValidator, companyForgotPasswordValidator, companyUsersForgotPasswordValidator, resetPasswordValidator, individualSigninValidator, companySigninValidator } = require('../validators/auth');
 const { runValidation } = require('../validators');
 
@@ -15,8 +15,8 @@ router.put('/forgotpassword', companyForgotPasswordValidator, runValidation, for
 router.put('/forgotpasswordforCompany', companyUsersForgotPasswordValidator, runValidation, forgotPaswordforCompany);
 router.put('/reset-password',resetPasswordValidator, runValidation, ResetPassword);
 // router.get('/get-all-companies',getALlCompmanies);
-// router.get('/secret', validateTokenMiddleware, companyMiddleware, (req,res) => {
-//     res.json("reached endpoint")
+// router.get('/secret', requireSignin, IndividualMiddleware ,(req,res) => {
+//     return res.json("reached endpoint")
 // });
 
 module.exports = router;
