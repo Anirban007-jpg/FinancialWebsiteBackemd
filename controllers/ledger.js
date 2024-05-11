@@ -21,19 +21,19 @@ exports.createDebtor = (req, res) => {
         }
 
 
-        Ledger.findOneAndUpdate({ Account_Name: 'Debtor A/C' }, { $push: { Debtors: success._id } }, { new: true, upsert: false }).exec((err, success) => {
+        Ledger.findOneAndUpdate({ Account_Name: 'Debtor A/C' }, { $push: { Debtors: success._id } }, { upsert: true }).exec((err, success) => {
             if (err) {
                 return res.status(400).json({
                     error: err
                 })
             }
 
-            // Opening_Balance : math.round(math.sum(parseFloat(Opening_Balance).toFixed(2),debtor_balance,0))}
-            console.log(success);
             res.status(200).json({
                 message: `Your Debtor is created`
             })
         });
+
+
 
     })
 }
@@ -47,10 +47,10 @@ exports.createLedger = (req, res) => {
             })
         }
 
-        const { Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Sub_Account_type, Head_Item_Type, Account_Balance_Type, Opening_Balance } = req.body;
+        const { Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Sub_Account_type, Head_Item_Type, Account_Balance_Type, Opening_Balance, Account_SubClass } = req.body;
 
-
-        let newledger = new Ledger({ Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Sub_Account_type, Head_Item_Type, Opening_Balance, Balance: Opening_Balance, Account_Balance_Type });
+        let Balance = Opening_Balance;
+        let newledger = new Ledger({ Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Sub_Account_type, Head_Item_Type, Opening_Balance, Balance: Balance, Account_SubClass, Account_Balance_Type });
 
         newledger.save((err, result) => {
             if (err) {
@@ -61,11 +61,10 @@ exports.createLedger = (req, res) => {
 
 
             return res.status(200).json({
-                message: `Your  is created`
+                message: `Your ${result.Account_Name} is created`
             })
         })
-    }
-    )
+    })
 }
 
 
@@ -86,7 +85,8 @@ exports.updateDebtorAccount = (req, res) => {
                 console.log(ledger);
                 let new_balance = math.round(sumofDebtorRealBalance, 0);
                 const updatedFields = {
-                    Opening_Balance: new_balance
+                    Opening_Balance: new_balance,
+                    Balance: new_balance
                 }
                 ledger = _.extend(ledger, updatedFields);
                 ledger.save((err, success) => {
@@ -152,7 +152,8 @@ exports.updateCreditorAccount = (req, res) => {
                 console.log(ledger);
                 let new_balance = math.round(sumofCreditorRealBalance, 0);
                 const updatedFields = {
-                    Opening_Balance: new_balance
+                    Opening_Balance: new_balance,
+                    Balance: new_balance
                 }
                 ledger = _.extend(ledger, updatedFields);
                 ledger.save((err, success) => {

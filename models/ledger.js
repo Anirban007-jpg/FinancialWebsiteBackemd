@@ -21,6 +21,13 @@ const ledgerSchema = new mongoose.Schema({
         type: ObjectId,
         ref : 'Creditor' 
     }],
+    Account_Class : {
+        type: String
+    },
+    Account_SubClass : {
+        type: String
+    },
+    
     Type_of_Item: {
         type: String,
     },
