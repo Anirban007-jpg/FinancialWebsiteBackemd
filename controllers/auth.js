@@ -380,7 +380,7 @@ exports.IndividualMiddleware = (req,res,next) => {
     }) 
 }
   
-  exports.adminMiddleware = (req,res,next) => {
+exports.CompanyMiddleware = (req,res,next) => {
     const adminUserId = req.auth._id;
     Company.findById({_id: adminUserId}).exec((err,company) => {
       if (err || !company){
@@ -388,15 +388,15 @@ exports.IndividualMiddleware = (req,res,next) => {
          error: "Company already exsists"
        })
       }
-      if (company.role !== "Admin" || company.role === "Compamy"){
+      if (company.role ==="Individual" || company.role !== "Compamy"){
         return res.status(400).json({
-          error: "Admin Resource ! Access Denied"
+          error: "COmpany Resource ! Access Denied"
         })
       }
   
       req.profile = company;
       next();
     })
-  }
+}
   
        

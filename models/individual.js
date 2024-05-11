@@ -61,6 +61,10 @@ const individualSchema = new mongoose.Schema({
     Initials: {
         type: String
     },
+    photo : {
+        data: Buffer,
+        contentType: String
+    }
  
 }, {timestamp: true})
 

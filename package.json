@@ -28,7 +28,7 @@
     "jsonwebtoken": "^9.0.2",
     "loadash": "^1.0.0",
     "math": "^0.0.3",
-    "mathjs": "^12.3.2",
+    "mathjs": "^12.4.2",
     "mongodb": "^6.3.0",
     "mongoose": "^5.12.10",
     "mongoose-float": "^1.0.4",
