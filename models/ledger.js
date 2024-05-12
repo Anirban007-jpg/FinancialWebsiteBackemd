@@ -31,6 +31,9 @@ const ledgerSchema = new mongoose.Schema({
     Type_of_Item: {
         type: String,
     },
+    Rate_of_tax : {
+        type: Number
+    },
     Sub_Account_type : {
         type: String
     },
