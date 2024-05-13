@@ -27,20 +27,22 @@ const ledgerSchema = new mongoose.Schema({
     Account_SubClass : {
         type: String
     },
-    
     Type_of_Item: {
         type: String,
     },
     Rate_of_tax : {
         type: Number
     },
-    Sub_Account_type : {
+    Account_Group : {
         type: String
     },
     Tax_Account_Type :{
         type: String
     },
-    Head_Item_Type : {
+    Currency : {
+        type: String
+    },
+    Head_Item_Group : {
         type:String
     },
     Opening_Balance :{

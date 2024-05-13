@@ -47,10 +47,10 @@ exports.createLedger = (req, res) => {
             })
         }
 
-        const { Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Rate_of_tax,Sub_Account_type, Head_Item_Type, Account_Balance_Type, Opening_Balance, Account_SubClass } = req.body;
+        const { Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Rate_of_tax,Account_Group, Head_Item_Group, Account_Balance_Type,Tax_Account_Type,Account_Class,Currency, Opening_Balance, Account_SubClass } = req.body;
 
         let Balance = Opening_Balance;
-        let newledger = new Ledger({ Financial_Year, Assessment_Year, Account_Name, Rate_of_tax,Type_of_Item, Sub_Account_type, Head_Item_Type, Opening_Balance, Balance: Balance, Account_SubClass, Account_Balance_Type });
+        let newledger = new Ledger({ Financial_Year, Assessment_Year, Account_Name, Rate_of_tax,Type_of_Item, Account_Group, Head_Item_Group,Tax_Account_Type, Currency,Account_Class,Opening_Balance, Balance: Balance, Account_SubClass, Account_Balance_Type });
 
         newledger.save((err, result) => {
             if (err) {
