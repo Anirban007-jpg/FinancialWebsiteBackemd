@@ -41,16 +41,18 @@ exports.createDebtor = (req, res) => {
 exports.createLedger = (req, res) => {
 
     Ledger.findOne({ Account_Name: req.body.Account_Name }).exec((err, ledger) => {
+        console.log(ledger);
         if (ledger) {
             return res.status(400).json({
                 error: "Ledger already exsist"
             })
         }
 
-        const { Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Rate_of_tax,Account_Group, Head_Item_Group, Account_Balance_Type,Tax_Account_Type,Account_Class,Currency, Opening_Balance, Account_SubClass } = req.body;
+        const { Financial_Year, Assessment_Year, Account_Name, Type_of_Item, Rate_of_tax,Account_Group, Head_Item_Group, Account_Balance_Type,Tax_Account_Type,Account_Class,Currency, Account_SubClass } = req.body;
 
-        let Balance = Opening_Balance;
-        let newledger = new Ledger({ Financial_Year, Assessment_Year, Account_Name, Rate_of_tax,Type_of_Item, Account_Group, Head_Item_Group,Tax_Account_Type, Currency,Account_Class,Opening_Balance, Balance: Balance, Account_SubClass, Account_Balance_Type });
+        let number =  parseFloat(req.body.Bal_Start).toFixed(2);
+        let Opening_Balance = math.round(number,0);
+        let newledger = new Ledger({ Financial_Year, Assessment_Year, Account_Name, Rate_of_tax,Type_of_Item, Account_Group, Head_Item_Group,Tax_Account_Type, Currency,Account_Class,Opening_Balance:Opening_Balance, Balance: Opening_Balance, Account_SubClass, Account_Balance_Type });
 
         newledger.save((err, result) => {
             if (err) {
