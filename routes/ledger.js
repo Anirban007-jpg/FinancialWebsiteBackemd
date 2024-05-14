@@ -11,9 +11,9 @@ router.post('/createLedgerforCompanyUser', requireSignin,CompanyMiddleware, crea
 
 
 // router.post('/test', test);
-router.post('/createDebtor', createDebtor);
-router.post('/createCreditor', createCreditor);
-router.post('/updateCreditorAccoun', updateCreditorAccount);
-router.put('/updateDebtorAccount', updateDebtorAccount);
+router.post('/createDebtor', requireSignin,IndividualMiddleware,createDebtor);
+router.post('/createCreditor', requireSignin,IndividualMiddleware,createCreditor);
+router.post('/updateCreditorAccount', requireSignin,IndividualMiddleware,updateCreditorAccount);
+router.put('/updateDebtorAccount', requireSignin,IndividualMiddleware,updateDebtorAccount);
 
 module.exports = router;
