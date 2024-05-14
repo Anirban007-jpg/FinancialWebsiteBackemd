@@ -174,3 +174,9 @@ exports.updateCreditorAccount = (req, res) => {
         })
 }
 
+exports.GetAllLedgers = (req,res) => {
+    Ledger.find({}).exec((err, data) => {
+        res.json(data);
+    })
+}
+
