@@ -15,6 +15,6 @@ router.post('/createDebtor', requireSignin,IndividualMiddleware,createDebtor);
 router.post('/createCreditor', requireSignin,IndividualMiddleware,createCreditor);
 router.post('/updateCreditorAccount', requireSignin,IndividualMiddleware,updateCreditorAccount);
 router.put('/updateDebtorAccount', requireSignin,IndividualMiddleware,updateDebtorAccount);
-router.get('/displayLedgers', requireSignin,GetAllLedgers);
+router.get('/displayLedgers', GetAllLedgers);
 
 module.exports = router;
