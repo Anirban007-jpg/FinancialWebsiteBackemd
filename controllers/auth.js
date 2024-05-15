@@ -27,7 +27,7 @@ exports.companysignup = (req, res) => {
             const {Company_Name,TAN_No,Company_email,Company_address,Company_contact_no,password,confirmedPassword,role} = req.body;
             let gs = Company_Name.replace(/[a-z]/g, '');
             let Initials= gs.replace(/\s+/g, '');
-            let profile = `${process.env.CLIENT_URL}/profile/${Initials}`;
+            let profile = `${process.env.CLIENT_URL}/Company/profile/${Initials}`;
             
             if (confirmedPassword === null){
                 return res.status(403).json({
@@ -76,7 +76,7 @@ exports.individualsignup = (req, res) => {
              
              let gs = Name.replace(/[a-z]/g, '');
              let Initials= gs.replace(/\s+/g, '');
-             let profile = `${process.env.CLIENT_URL}/profile/${Initials}`;
+             let profile = `${process.env.CLIENT_URL}/Individual/profile/${Initials}`;
              
              if (confirmedPassword === null){
                  return res.status(403).json({
