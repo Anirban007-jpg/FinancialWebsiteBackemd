@@ -13,7 +13,7 @@ router.post('/createLedgerforCompanyUser', requireSignin,CompanyMiddleware, crea
 // router.post('/test', test);
 router.post('/createDebtor', requireSignin,IndividualMiddleware,createDebtor);
 router.post('/createCreditor', requireSignin,IndividualMiddleware,createCreditor);
-router.post('/updateCreditorAccount', requireSignin,IndividualMiddleware,updateCreditorAccount);
+router.put('/updateCreditorAccount', requireSignin,IndividualMiddleware,updateCreditorAccount);
 router.put('/updateDebtorAccount', requireSignin,IndividualMiddleware,updateDebtorAccount);
 router.get('/displayLedgers', GetAllLedgers);
 

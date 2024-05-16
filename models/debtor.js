@@ -18,8 +18,10 @@ const debtorSchema = new mongoose.Schema({
     },
     Debtor_balance : {
         type: Number
+    },
+    Debtor_Currency : {
+        type: String
     }
-    
     
 }, {timestamp: true})
 

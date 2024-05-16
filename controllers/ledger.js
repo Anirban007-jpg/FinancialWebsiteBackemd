@@ -8,9 +8,11 @@ const math = require("mathjs");
 
 exports.createDebtor = (req, res) => {
 
-    const { Debtor_name, Debtor_address, Debtor_contact_no, Debtor_email, Debtor_balance } = req.body;
+    const { Debtor_name, Debtor_address, Debtor_contact_no, Debtor_email, Debtor_balance, Debtor_Currency } = req.body;
 
-    let newDebtor = new Debtor({ Debtor_name, Debtor_address, Debtor_contact_no, Debtor_email, Debtor_balance });
+    let debtoBalance = math.round(parseFloat(Debtor_balance).toFixed(2),0);
+
+    let newDebtor = new Debtor({ Debtor_name, Debtor_address, Debtor_contact_no, Debtor_email, Debtor_balance: debtoBalance, Debtor_Currency });
 
 
     newDebtor.save((err, success) => {
@@ -99,7 +101,7 @@ exports.updateDebtorAccount = (req, res) => {
                     }
                     else if (success) {
                         res.status(200).json({
-                            message: "data updated"
+                            message: "Debtor Ledger Balance updated"
                         });
                         // console.log(success);
                     }
@@ -175,7 +177,7 @@ exports.updateCreditorAccount = (req, res) => {
 }
 
 exports.GetAllLedgers = (req,res) => {
-    Ledger.find({}).exec((err, data) => {
+    Ledger.find({}).populate('Debtors','Debtor_name Debtor_address Debtor_contact_no Debtor_email Debtor_balance Debtor_Currency').exec((err, data) => {
         res.json(data);
     })
 }

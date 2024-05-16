@@ -359,7 +359,7 @@ exports.signout = (req,res) => {
 
 exports.IndividualMiddleware = (req,res,next) => {
     const authUserId = req.auth._id;
-    console.log(authUserId);
+    // console.log(authUserId);
     Individual.findById({_id: authUserId}).exec((err,individual) => {
       if (err || !individual){
        return res.status(400).json({
