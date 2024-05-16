@@ -12,6 +12,7 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
 const { OAuth2Client } = require('google-auth-library');
+const formidable = require('formidable');
 
 
 
@@ -399,4 +400,57 @@ exports.CompanyMiddleware = (req,res,next) => {
     })
 }
   
-       
+exports.updateUserProfile = (req,res) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err,fields,files) => {
+        if (err) {
+            return res.status(400).json({
+                error: 'Photo could not be uploaded'
+            });
+        }
+        let individual = req.profile;
+        individual = _.extend(individual,fields);
+
+        if (files.photo) {
+            if (files.photo.size > 10000000) {
+                return res.status(400).json({
+                    error: 'Image should be less than 1mb'
+                });
+            }
+            individual.photo.data = fs.readFileSync(files.photo.path);
+            individual.photo.contentType = files.photo.type;
+        }
+
+        individual.save((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            // individual.hashed_password = undefined;
+            res.json(individual);
+        });
+
+    })
+}       
+
+exports.photo = (req, res) => {
+    const id = req.params._id;
+    Individual.findOne({ _id }).exec((err, user) => {
+        if (err || !user) {
+            return res.status(400).json({
+                error: 'User not found'
+            });
+        }
+        if (user.photo.data) {
+            res.set('Content-Type', user.photo.contentType);
+            return res.send(user.photo.data);
+        }
+    });
+};
+
+exports.read = (req,res) => {
+    req.profile.hashed_password = undefined;
+    return res.json(req.profile);
+};
