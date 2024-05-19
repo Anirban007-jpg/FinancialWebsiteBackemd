@@ -75,7 +75,7 @@ exports.createLedger = (req, res) => {
 exports.updateDebtorAccount = (req, res) => {
 
     const { Account_Name } = req.body;
-    Ledger.findOne({ Account_Name: Account_Name })
+    Ledger.findOne({ Account_Name })
         .populate('Debtors', '_id Debtor_name Debtor_address Debtor_contact_no Debtor_email Debtor_balance').exec((err, data) => {
             // console.log(data);
             var sumofDebtorRealBalance = 0.00;
@@ -112,9 +112,11 @@ exports.updateDebtorAccount = (req, res) => {
 
 exports.createCreditor = (req, res) => {
 
-    const { Creditor_name, Creditor_address, Creditor_contact_no, Creditor_email, Creditor_Balance } = req.body;
+    const { Creditor_name, Creditor_address, Creditor_contact_no, Creditor_email, Creditor_balance,Creditor_Currency } = req.body;
 
-    let newCreditor = new Creditor({ Creditor_name, Creditor_address, Creditor_contact_no, Creditor_email, Creditor_Balance });
+    let Creditor_Balance = math.round(parseFloat(Creditor_balance).toFixed(2),0);
+
+    let newCreditor = new Creditor({ Creditor_name, Creditor_address, Creditor_contact_no, Creditor_email, Creditor_Balance,Creditor_Currency });
 
 
     newCreditor.save((err, success) => {
@@ -132,8 +134,8 @@ exports.createCreditor = (req, res) => {
                 })
             }
 
-            res.status(200).json({
-                message: `Your Creditor is created`
+            return res.status(200).json({
+                message: `Your Creditor is created...Please update your Creditor Balance immediately`
             })
         });
     })
@@ -143,7 +145,7 @@ exports.createCreditor = (req, res) => {
 exports.updateCreditorAccount = (req, res) => {
 
     const { Account_Name } = req.body;
-    Ledger.findOne({ Account_Name: Account_Name })
+    Ledger.findOne({ Account_Name })
         .populate('Creditors', '_id Creditor_name Creditor_address Creditor_contact_no Creditor_email Creditor_Balance').exec((err, data) => {
             // console.log(data);
             var sumofCreditorRealBalance = 0.00;
@@ -168,7 +170,7 @@ exports.updateCreditorAccount = (req, res) => {
                     }
                     else if (success) {
                         res.status(200).json({
-                            message: "data updated"
+                            message: "Creditor Ledger Balance updated"
                         });
                     }
                 })
@@ -177,7 +179,7 @@ exports.updateCreditorAccount = (req, res) => {
 }
 
 exports.GetAllLedgers = (req,res) => {
-    Ledger.find({}).populate('Debtors','Debtor_name Debtor_address Debtor_contact_no Debtor_email Debtor_balance Debtor_Currency').exec((err, data) => {
+    Ledger.find({}).populate('Debtors','Debtor_name Debtor_address Debtor_contact_no Debtor_email Debtor_balance Debtor_Currency').populate('Creditors','Creditor_name Creditor_address Creditor_contact_no Creditor_email Creditor_Balance Creditor_Currency').exec((err, data) => {
         res.json(data);
     })
 }
