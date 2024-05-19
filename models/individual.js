@@ -39,8 +39,8 @@ const individualSchema = new mongoose.Schema({
     Contact_no: {
         type: String
     },
-    Acknowledgement_No:{
-        type: String, 
+    Acknowledgement_No: {
+        type: String,
         trim: true,
         upperCase: true
     },
@@ -54,19 +54,26 @@ const individualSchema = new mongoose.Schema({
     verification_code: {
         type: Number
     },
-    email_verified : {
+    email_verified: {
         type: Number,
         default: 0
     },
     Initials: {
         type: String
     },
-    photo : {
+    Username: {
+        type: String,
+        trim: true,
+        unique: true,
+        index: true,
+        lowerCase: true
+    },
+    photo: {
         data: Buffer,
         contentType: String
     }
- 
-}, {timestamp: true})
+
+}, { timestamp: true })
 
 
 module.exports = mongoose.model('Individual', individualSchema);

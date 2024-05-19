@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.put('/updateIndividualProfile', requireSignin, IndividualMiddleware,updateUserProfile);
-router.get('/photo/:id', photo);
+router.get('/photo/:_id', photo);
 router.get('/individual/profile', requireSignin, IndividualMiddleware, read);
 
 module.exports = router;

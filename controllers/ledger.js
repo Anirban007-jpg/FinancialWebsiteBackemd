@@ -31,7 +31,7 @@ exports.createDebtor = (req, res) => {
             }
 
             res.status(200).json({
-                message: `Your Debtor is created`
+                message: `Your Debtor is created.... Please Update ur ledger data balance immediately...`
             })
         });
 

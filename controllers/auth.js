@@ -305,10 +305,10 @@ exports.login = (req,res) => {
        
            res.cookie('token', token, {expiresIn: '1d'});
        
-           const {Name,PAN_No,Email,role,Initials,Address,Contact_no,profile,Acknowledgement_No,email_verified} = individual;
+           const {Name,_id,PAN_No,Email,role,Username,Initials,Address,Contact_no,profile,Acknowledgement_No,email_verified} = individual;
            return res.status(200).json({
                token,
-               individual: {Name,PAN_No,Email,role,Initials,Address,Contact_no,profile,Acknowledgement_No,email_verified}
+               individual: {_id,Name,PAN_No,Email,role,Initials,Username,Address,Contact_no,profile,Acknowledgement_No,email_verified}
            })
         })  
 }
@@ -368,14 +368,14 @@ exports.IndividualMiddleware = (req,res,next) => {
             })
         }
 
-        console.log(individual);
+        // console.log(individual);
   
         if (individual.role === "Company" || individual.role === "Admin" || individual.role !== "Individual"){
             return res.status(400).json({
                 error: "Individual Area ! Access Denied"
             })
         }
-  
+
         req.profile = individual;
         next();
     }) 
@@ -411,7 +411,8 @@ exports.updateUserProfile = (req,res) => {
         }
         let individual = req.profile;
         individual = _.extend(individual,fields);
-
+    
+        
         if (files.photo) {
             if (files.photo.size > 10000000) {
                 return res.status(400).json({
@@ -421,7 +422,7 @@ exports.updateUserProfile = (req,res) => {
             individual.photo.data = fs.readFileSync(files.photo.path);
             individual.photo.contentType = files.photo.type;
         }
-
+        // console.log(individual);
         individual.save((err, result) => {
             if (err) {
                 return res.status(400).json({
@@ -429,15 +430,15 @@ exports.updateUserProfile = (req,res) => {
                 });
             }
             // individual.hashed_password = undefined;
-            res.json(individual);
+            res.json(result);
         });
 
     })
 }       
 
 exports.photo = (req, res) => {
-    const id = req.params._id;
-    Individual.findOne({ _id }).exec((err, user) => {
+    const _id = req.params._id;
+    Individual.findOne({ _id}).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: 'User not found'
