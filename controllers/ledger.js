@@ -4,6 +4,8 @@ const Ledger = require("../models/ledger");
 const Creditor = require("../models/creditor");
 const _ = require('lodash');
 const math = require("mathjs");
+const debtor = require("../models/debtor");
+const creditor = require("../models/creditor");
 
 
 exports.createDebtor = (req, res) => {
@@ -180,6 +182,19 @@ exports.updateCreditorAccount = (req, res) => {
 
 exports.GetAllLedgers = (req,res) => {
     Ledger.find({}).populate('Debtors','Debtor_name Debtor_address Debtor_contact_no Debtor_email Debtor_balance Debtor_Currency').populate('Creditors','Creditor_name Creditor_address Creditor_contact_no Creditor_email Creditor_Balance Creditor_Currency').exec((err, data) => {
+        res.json(data);
+    })
+}
+
+exports.GetAllDebtors = (req,res) => {
+    debtor.find({}).exec((err, data) => {
+        res.json(data);
+    })
+}
+
+
+exports.GetAllCreditors = (req,res) => {
+    creditor.find({}).exec((err, data) => {
         res.json(data);
     })
 }

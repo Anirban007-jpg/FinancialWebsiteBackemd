@@ -1,5 +1,5 @@
 const express = require('express');
-const { createDebtor, createLedger, updateDebtorAccount, test, createCreditor, updateCreditorAccount, GetAllLedgers } = require('../controllers/ledger');
+const { createDebtor, createLedger, updateDebtorAccount, test, createCreditor, updateCreditorAccount, GetAllLedgers, GetAllDebtors } = require('../controllers/ledger');
 const {requireSignin, IndividualMiddleware, CompanyMiddleware} = require('../controllers/auth');
 const router = express.Router();
 
@@ -16,5 +16,6 @@ router.post('/createCreditor', requireSignin,IndividualMiddleware,createCreditor
 router.put('/updateCreditorAccount', requireSignin,IndividualMiddleware,updateCreditorAccount);
 router.put('/updateDebtorAccount', requireSignin,IndividualMiddleware,updateDebtorAccount);
 router.get('/displayLedgers', GetAllLedgers);
+router.get('/displayDebtors', GetAllDebtors);
 
 module.exports = router;

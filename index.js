@@ -17,6 +17,7 @@ mongoose.connect(process.env.DATABASE, {useNewUrlParser: true, useCreateIndex: t
 // middlewares
 app.use(morgan("dev"))
 app.use(express.json())
+app.use(express.urlencoded({extended: true}));
 app.use(cp())
 
 
