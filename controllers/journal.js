@@ -28,11 +28,11 @@ exports.stimulateJournal = async (req, res) => {
         var Credit_Item_balance = math.subtract(Credit_Item_balance, Discount_Received_Balance);
 
         var numval = math.sum(Credit_Item_balance, Discount_Received_Balance)
-        if (Debit_Item_balance !== numval) {
-            return res.status(400).json({
-                error: "Debit and credit must be equal"
-            })
-        }
+        // if (Debit_Item_balance !== numval) {
+        //     return res.status(400).json({
+        //         error: "Debit and credit must be equal"
+        //     })
+        // }
     }
 
 
